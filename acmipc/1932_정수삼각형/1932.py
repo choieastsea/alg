@@ -11,6 +11,7 @@ for level, line in enumerate(triangle):
             elif i == len(line)-1:
                 line[i] += prev_line[i-1]
             else:
+                # 윗줄에서 더 큰것과 더하면 된다
                 line[i] += max(prev_line[i-1],prev_line[i])
     prev_line = line
 print(max(triangle[-1]))
