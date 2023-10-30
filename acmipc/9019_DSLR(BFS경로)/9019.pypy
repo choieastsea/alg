@@ -1,0 +1,62 @@
+from sys import stdin
+from collections import deque
+input = stdin.readline
+
+
+def bfs_path(a, b):
+    """
+    DSLR 연산을 이용하여
+    a에서 b가 되도록 만드는 최소 경로
+    """
+    def toStr(a):
+        return str(a) if len(str(a)) == 4 else (4-len(str(a)))*'0' + str(a)
+
+    def d(a):
+        return 2*a % 10000
+
+    def s(a):
+        return a-1 if a != 0 else 9999
+
+    def l(a):
+        str_a = toStr(a)
+        return int(str_a[1:] + str_a[0])
+
+    def r(a):
+        str_a = toStr(a)
+        return int(str_a[-1] + str_a[:3])
+    q = deque()
+    q.append(a)
+    visited = set()
+    path = [(i, '') for i in range(10000)]  # 이전에 어디서 어떻게 왔는지를 저장
+    while q:
+        cur_num = q.popleft()
+        # print(f'{cur_num} 방문, 현재 path : {path}')
+        if cur_num == b:
+            # a에서 b까지 path 역방향 탐색
+            path_list = []
+            while cur_num != a:
+                path_list.append(path[cur_num][1])
+                cur_num = path[cur_num][0]
+            return ''.join(path_list)[::-1]
+        if (d_num := d(cur_num)) not in visited:
+            q.append(d_num)
+            visited.add(d_num)
+            path[d_num] = (cur_num, 'D')
+        if (s_num := s(cur_num)) not in visited:
+            q.append(s_num)
+            visited.add(s_num)
+            path[s_num] = (cur_num, 'S')
+        if (l_num := l(cur_num)) not in visited:
+            q.append(l_num)
+            visited.add(l_num)
+            path[l_num] = (cur_num, 'L')
+        if (r_num := r(cur_num)) not in visited:
+            q.append(r_num)
+            visited.add(r_num)
+            path[r_num] = (cur_num, 'R')
+
+
+t = int(input())
+for _ in range(t):
+    a, b = map(int, input().split())
+    print(bfs_path(a, b))
