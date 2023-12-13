@@ -1,0 +1,31 @@
+from sys import stdin
+input = stdin.readline
+
+n = int(input())
+case = 0
+not_col = set()
+not_upper = set()
+not_lower = set()
+
+
+def BT(row):
+    """
+    row 행에 퀸을 넣었을 때의 경우를 구함
+    """
+    global case
+    if row == n:  # n-1 번째 row 까지 도달
+        case += 1
+    for col in range(n):
+        if col not in not_col and (row + col) not in not_upper and (row - col) not in not_lower:
+            # row, col에 queen이 가능함
+            not_col.add(col)
+            not_upper.add(row+col)
+            not_lower.add(row-col)
+            BT(row+1)  # 다음 행으로 넘어가서 실행
+            not_col.remove(col)
+            not_upper.remove(row+col)
+            not_lower.remove(row-col)
+
+
+BT(0)
+print(case)
